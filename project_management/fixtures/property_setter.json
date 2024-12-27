@@ -1,0 +1,18 @@
+[
+ {
+  "default_value": "Open",
+  "doc_type": "Task",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "status",
+  "is_system_generated": 0,
+  "modified": "2024-12-26 18:05:46.727241",
+  "module": null,
+  "name": "Task-status-options",
+  "property": "options",
+  "property_type": null,
+  "row_name": null,
+  "value": "Open\nAssign\nWorking\nClearify\nPending Review\nTesting\nTesting Fail\nCancelled\nCompleted\nOverdue\nTemplate"
+ }
+]
