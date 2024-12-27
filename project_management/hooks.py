@@ -43,22 +43,22 @@ app_license = "mit"
 # page_js = {"page" : "public/js/file.js"}
 
 fixtures = [
-    # {
-    #     "doctype": "Custom Field",
-    #     "filters": [
-    #     [ "name", "in",
-    #     ("Task-custom_work_stage")
-    #     ]
-    #     ]
-    # },
-     {
-        "doctype": "Property Setter",
+    {
+        "doctype": "Custom Field",
         "filters": [
         [ "name", "in",
-        ("Task-status-options")
+        ("Task-custom_parent_task_name","Task-custom_project_name")
         ]
         ]
     },
+    #  {
+    #     "doctype": "Property Setter",
+    #     "filters": [
+    #     [ "name", "in",
+    #     ("Task-status-options")
+    #     ]
+    #     ]
+    # },
 ]
 
 # bench export-fixtures
