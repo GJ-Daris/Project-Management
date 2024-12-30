@@ -47,7 +47,7 @@ fixtures = [
         "doctype": "Custom Field",
         "filters": [
         [ "name", "in",
-        ("Task-custom_parent_task_name","Task-custom_project_name")
+        ("Employee-custom_additional_department_","Employee-custom_section_break_upn4k")
         ]
         ]
     },
