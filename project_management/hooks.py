@@ -47,18 +47,24 @@ fixtures = [
         "doctype": "Custom Field",
         "filters": [
         [ "name", "in",
-        ("Employee-custom_additional_department_","Employee-custom_section_break_upn4k")
+        (
+            "Task-custom_project_name",
+            "Employee-custom_additional_department_",
+            "Employee-custom_section_break_upn4k",
+            "Task-custom_task_level",
+            "Task-custom_task_leve_name"
+        )
         ]
         ]
     },
-    #  {
-    #     "doctype": "Property Setter",
-    #     "filters": [
-    #     [ "name", "in",
-    #     ("Task-status-options")
-    #     ]
-    #     ]
-    # },
+     {
+        "doctype": "Property Setter",
+        "filters": [
+        [ "name", "in",
+        ("Task-status-options")
+        ]
+        ]
+    },
 ]
 
 # bench export-fixtures
