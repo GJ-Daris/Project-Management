@@ -1,7 +1,5 @@
 frappe.ui.form.on('Task', {
     refresh: function (frm) {
-        // ซ่อนฟิลด์ task_weight
-        frm.toggle_display('task_weight', false);
         if (frm.doc.project) {
             // Fetch project name by project
             frappe.db.get_value('Project', { name: frm.doc.project }, 'project_name')
