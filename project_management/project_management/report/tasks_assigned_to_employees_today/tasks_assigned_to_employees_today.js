@@ -17,7 +17,7 @@ frappe.query_reports["Tasks Assigned to Employees Today"] = {
             "wildcard_filter": 0
         },
         {
-            "fieldname": "employee",
+            "fieldname": "employee_id",
             "label": __("Employee"),
             "fieldtype": "Link",
             "options": "Employee",

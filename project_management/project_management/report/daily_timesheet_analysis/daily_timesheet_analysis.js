@@ -20,7 +20,7 @@ frappe.query_reports["Daily Timesheet Analysis"] = {
             "wildcard_filter": 0
         },
         {
-            "fieldname": "employee",
+            "fieldname": "employee_id",
             "label": __("Employee"),
             "fieldtype": "Link",
             "options": "Employee",
