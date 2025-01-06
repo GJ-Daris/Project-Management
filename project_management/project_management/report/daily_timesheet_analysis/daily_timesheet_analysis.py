@@ -47,6 +47,10 @@ def get_data(filters):
             `tabEmployee` emp
         LEFT JOIN
             `tabTimesheet` ts ON ts.employee = emp.name
+            AND (
+                    DATE(%(date)s) BETWEEN DATE(ts.start_date) AND DATE(ts.end_date) 
+                    OR DATE(ts.start_date) = %(date)s
+                )
         LEFT JOIN
             `tabTimesheet Detail` tsd ON tsd.parent = ts.name
         LEFT JOIN
@@ -56,7 +60,6 @@ def get_data(filters):
         WHERE
             (%(task_name_null)s = 0 AND task.name IS NULL)
             OR (%(task_name_null)s = 1 AND task.name IS NOT NULL)
-            AND (%(date)s BETWEEN ts.start_date AND ts.end_date OR ts.start_date = %(date)s)
     """
 
     # Add dynamic filters if provided
