@@ -46,16 +46,16 @@ fixtures = [
     {
         "doctype": "Custom Field",
         "filters": [
-        [ "name", "in",
-        (
-            "Task-custom_project_name",
-            "Employee-custom_additional_department_",
-            "Employee-custom_section_break_upn4k",
-            "Task-custom_task_level",
-            "Task-custom_task_leve_name",
-            "Task-custom_is_overdue"
-        )
-        ]
+            [ "name", "in",
+                (
+                    "Task-custom_project_name",
+                    "Employee-custom_additional_department_",
+                    "Employee-custom_section_break_upn4k",
+                    "Task-custom_task_level",
+                    "Task-custom_task_leve_name",
+                    "Task-custom_is_overdue"
+                )
+            ]
         ]
     },
      {
@@ -67,8 +67,13 @@ fixtures = [
         ]
     },
 ]
-
 # bench export-fixtures
+
+scheduler_events = {
+    "daily": [
+        "project_management.custom.custom_task.set_tasks_as_overdue",
+    ]
+}
 
 # include js in doctype views
 doctype_js = {
@@ -206,9 +211,10 @@ doctype_list_js = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "project_management.event.get_events"
-# }
+override_whitelisted_methods = {
+    "erpnext.projects.doctype.task.task.set_tasks_as_overdue": "project_management.custom.custom_task.set_tasks_as_overdue"
+}
+
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,

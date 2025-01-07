@@ -1,71 +1,51 @@
 // Helper function: Toggle read_only on specified fields
-function set_fields_read_only(frm, fields, read_only) {
-    fields.forEach(field => frm.set_df_property(field, "read_only", read_only ? 1 : 0));
+function toggleReadOnly(frm, fields, isReadOnly) {
+    fields.forEach(field => frm.set_df_property(field, "read_only", isReadOnly ? 1 : 0));
 }
 
-// Helper function: Fetch a field value from DB and set it in the form
-function fetch_and_set_value(doctype, filters, source_field, frm, target_field) {
-    return frappe.db.get_value(doctype, filters, source_field)
-        .then(r => {
-            frm.set_value(
-                target_field,
-                r.message ? r.message[source_field] : ""
-            );
-        })
-        .catch(() => {
-            frm.set_value(target_field, "");
-        });
+// Helper function: Fetch and set a value from the database to the form
+async function fetchAndSetValue(doctype, filters, sourceField, frm, targetField) {
+    try {
+        const { message } = await frappe.db.get_value(doctype, filters, sourceField);
+        frm.set_value(targetField, message ? message[sourceField] : "");
+    } catch (error) {
+        console.error(`Error fetching ${sourceField} for ${doctype}:`, error);
+        frm.set_value(targetField, "");
+    }
 }
 
+// Form events for Task
 frappe.ui.form.on("Task", {
     refresh(frm) {
-        // Check if user has the "Task Manager" role
-        const is_manager = frappe.user.has_role("Task Manager");
+        const isManager = frappe.user.has_role("Task Manager");
 
-        // 1) Handle read-only for exp_start_date & exp_end_date on existing documents
-        if (!frm.is_new() && (frm.doc.exp_start_date || frm.doc.exp_end_date)) {
-            set_fields_read_only(frm, ["exp_start_date", "exp_end_date"], !is_manager);
-        }
+        // Set exp_start_date & exp_end_date as read-only for non-managers on existing documents
+        /*
+            if (!frm.is_new() && (frm.doc.exp_start_date || frm.doc.exp_end_date)) {
+                toggleReadOnly(frm, ["exp_start_date", "exp_end_date"], !isManager);
+            }
+        */
 
-        // 2) Fetch project name
+        // Fetch project name and set in custom_project_name
         if (frm.doc.project) {
-            fetch_and_set_value(
-                "Project",
-                { name: frm.doc.project },
-                "project_name",
-                frm,
-                "custom_project_name"
-            );
+            fetchAndSetValue("Project", { name: frm.doc.project }, "project_name", frm, "custom_project_name");
         }
 
-        // 3) Fetch parent task’s subject
+        // Fetch parent task’s subject and set in custom_parent_task_name
         if (frm.doc.parent_task) {
-            fetch_and_set_value(
-                "Task",
-                { name: frm.doc.parent_task },
-                "subject",
-                frm,
-                "custom_parent_task_name"
-            );
+            fetchAndSetValue("Task", { name: frm.doc.parent_task }, "subject", frm, "custom_parent_task_name");
         }
 
-        // 4) Make 'custom_is_overdue' editable only if user has 'Task Manager' role
-        frm.set_df_property("custom_is_overdue", "read_only", !is_manager);
-
-        // 5) Disable 'status' 
-        //    - or user is not Task Manager
-        const disable_status =
-            !is_manager &&
-            (!frm.doc.exp_end_date || new Date() > new Date(frm.doc.exp_end_date))
-        frm.set_df_property("status", "read_only", disable_status);
+        // Make custom_is_overdue editable only for Task Managers
+        frm.set_df_property("custom_is_overdue", "read_only", !isManager);
     },
 });
 
-// Listview indicator
+// ListView settings for Task
 frappe.listview_settings["Task"] = {
-    get_indicator: function (doc) {
-        const colors = {
-            Open: "orange",
+    get_indicator(doc) {
+        const statusColors = {
+            Open: "red",
             Assign: "orange",
             Working: "orange",
             Clearify: "orange",
@@ -75,7 +55,10 @@ frappe.listview_settings["Task"] = {
             Completed: "green",
             Cancelled: "dark grey",
             Template: "blue",
+            Overdue: "red"
         };
-        return [__(doc.status), colors[doc.status], "status,=," + doc.status];
-    },
+
+        const color = statusColors[doc.status] || "grey";
+        return [__(doc.status), color, `status,=,${doc.status}`];
+    }
 };
