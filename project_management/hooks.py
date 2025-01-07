@@ -52,8 +52,7 @@ fixtures = [
             "Employee-custom_additional_department_",
             "Employee-custom_section_break_upn4k",
             "Task-custom_task_level",
-            "Task-custom_task_leve_name",
-            "Task-custom_is_overdue"
+            "Task-custom_task_leve_name"
         )
         ]
         ]
