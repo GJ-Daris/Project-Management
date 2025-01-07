@@ -25,11 +25,11 @@ def set_tasks_as_overdue():
 
         # Update the status of the task
         task_doc = frappe.get_doc("Task", task.name)
-        task_doc.update_status()
+        # task_doc.update_status()
 
         # Custom field update (if needed)
         if hasattr(task_doc, "custom_is_overdue"):
-            task_doc.custom_is_overdue = True
+            task_doc.custom_is_overdue = False
             task_doc.save()
 
     frappe.db.commit()  # Commit the changes
