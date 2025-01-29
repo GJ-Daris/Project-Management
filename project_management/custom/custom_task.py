@@ -11,6 +11,7 @@ def set_tasks_as_overdue():
         filters={
             'status': ['not in', ["Cancelled", "Completed"]],
             'exp_end_date': ['<', current_date],  # Directly filter overdue tasks
+            'exp_end_date': ['is', 'set']     # Ensure exp_end_date is not null
         },
         fields=["name", "exp_end_date"]
     )
