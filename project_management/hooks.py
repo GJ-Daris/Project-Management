@@ -69,6 +69,7 @@ fixtures = [
 ]
 # bench export-fixtures
 
+# Scheduled Job Type
 scheduler_events = {
     "daily": [
         "project_management.custom.custom_task.set_tasks_as_overdue",
@@ -212,7 +213,7 @@ doctype_list_js = {
 # ------------------------------
 #
 override_whitelisted_methods = {
-    "erpnext.projects.doctype.task.task.set_tasks_as_overdue": "project_management.custom.custom_task.set_tasks_as_overdue"
+    # "erpnext.projects.doctype.task.task.set_tasks_as_overdue": "project_management.custom.custom_task.set_tasks_as_overdue"
 }
 
 #

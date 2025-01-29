@@ -19,8 +19,8 @@ frappe.ui.form.on("Task", {
     refresh(frm) {
         const isManager = frappe.user.has_role("Task Manager");
 
-        // Set exp_start_date & exp_end_date as read-only for non-managers on existing documents
         /*
+        comment ไว้ก่อนยังไม่ได้ใช้งาน
             if (!frm.is_new() && (frm.doc.exp_start_date || frm.doc.exp_end_date)) {
                 toggleReadOnly(frm, ["exp_start_date", "exp_end_date"], !isManager);
             }
@@ -38,6 +38,8 @@ frappe.ui.form.on("Task", {
 
         // Make custom_is_overdue editable only for Task Managers
         frm.set_df_property("custom_is_overdue", "read_only", !isManager);
+        //  Make expected_time editable only for Task Managers
+        frm.set_df_property("expected_time", "read_only", !isManager);
     },
 });
 

@@ -1,36 +1,24 @@
 import frappe
-from frappe.utils import getdate, today
+from frappe.utils import today, add_days
 
-# @frappe.whitelist()
 def set_tasks_as_overdue():
-    """
-    Custom implementation of set_tasks_as_overdue.
-    Adds custom logic for handling overdue tasks.
-    """
-    print("Custom: Starting set_tasks_as_overdue job")
+    # Current date captured once to avoid multiple calls to 'today()'
+    current_date = today()
 
+    # Get all tasks that are not Cancelled or Completed, and are overdue
     tasks = frappe.get_all(
         "Task",
-        filters={"status": ["not in", ["Cancelled", "Completed"]]},
-        fields=["name", "status", "review_date"],
+        filters={
+            'status': ['not in', ["Cancelled", "Completed"]],
+            'exp_end_date': ['<', current_date],  # Directly filter overdue tasks
+        },
+        fields=["name", "exp_end_date"]
     )
 
+    # Update overdue tasks in bulk
     for task in tasks:
-        if task.status == "Pending Review":
-            if getdate(task.review_date) > getdate(today()):
-                continue
+        # Direct database update without loading the document
+        frappe.db.set_value("Task", task.name, "custom_is_overdue", True, update_modified=False)
 
-        # Example custom logic: Log the task being processed
-        print(f"Processing Task: {task.name}")
-
-        # Update the status of the task
-        task_doc = frappe.get_doc("Task", task.name)
-        # task_doc.update_status()
-
-        # Custom field update (if needed)
-        if hasattr(task_doc, "custom_is_overdue"):
-            task_doc.custom_is_overdue = False
-            task_doc.save()
-
-    frappe.db.commit()  # Commit the changes
-    print("Custom: Completed set_tasks_as_overdue job")
+    # Commit changes if not in a transaction
+    frappe.db.commit()
